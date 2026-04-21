@@ -8,7 +8,7 @@ metadata:
     project: roboshop
     app: app1
 spec:
-  replicas: 4
+  replicas: 2
   selector:
     # these labels are used to select pods
     matchLabels:
@@ -19,13 +19,14 @@ spec:
   template:
     metadata:
       labels:
+        # purpose: dp-demo
         purpose: ingress-demo
         project: roboshop
         app: app1
     spec:
       containers:
       - name: app1
-        image: sgraju/appv1:v1
+        image: joindevops/app1:v1
 ---
 apiVersion: v1
 kind: Service
@@ -33,8 +34,8 @@ metadata:
   name: app1
 spec:
   selector:
-    project: roboshop
     purpose: ingress-demo
+    project: roboshop
     app: app1
   ports:
     - protocol: TCP
@@ -51,11 +52,11 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/tags: Environment=dev,Project=roboshop
     alb.ingress.kubernetes.io/target-type: ip
- #   alb.ingress.kubernetes.io/group.name: roboshop
+    alb.ingress.kubernetes.io/group.name: roboshop
 spec:
   ingressClassName: alb
   rules:
-  - host: "app1.sgrdevsecops.fun"
+  - host: "app1.daws86s.fun"
     http:
       paths:
       - pathType: Prefix
@@ -65,4 +66,3 @@ spec:
             name: app1
             port:
               number: 80
-
